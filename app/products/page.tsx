@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import AddProduct from "./addProduct";
 import { PrismaClient } from "@prisma/client";
+import Delete from "./deleteProduct";
 const prisma = new PrismaClient();
 
 const getProducts = async () => {
@@ -10,6 +11,7 @@ const getProducts = async () => {
       id: true,
       title: true,
       price: true,
+      brandId: true,
       Brand: true,
     },
   });
@@ -48,7 +50,7 @@ const Products = async () => {
                   <th>{product.title}</th>
                   <td>{product.price}</td>
                   <td>{product.Brand.name}</td>
-                  <td>edit delete</td>
+                  <td> <Delete product={product}/> </td>
                 </tr>
               );
             })}
