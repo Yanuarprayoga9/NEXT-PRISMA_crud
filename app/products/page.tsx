@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import AddProduct from "./addProduct";
 import { PrismaClient } from "@prisma/client";
+import UpdateProduct from "./updateProduct";
 import Delete from "./deleteProduct";
 const prisma = new PrismaClient();
 
@@ -37,8 +38,8 @@ const Products = async () => {
             <tr>
               <th>No</th>
               <th>Product Name</th>
-              <th>Brand Name</th>
               <th>Price</th>
+              <th>Brand Name</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -50,7 +51,10 @@ const Products = async () => {
                   <th>{product.title}</th>
                   <td>{product.price}</td>
                   <td>{product.Brand.name}</td>
-                  <td> <Delete product={product}/> </td>
+                  <td> 
+                  <Delete product={product}/> 
+                  <UpdateProduct brands={brands} product={product}/>
+                  </td>
                 </tr>
               );
             })}

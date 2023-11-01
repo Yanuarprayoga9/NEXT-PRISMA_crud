@@ -2,38 +2,40 @@
 import React, { SyntheticEvent } from "react";
 import { useState } from "react";
 import type { Brand } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-const prisma = new PrismaClient();
-
-const AddProduct = ({ brands }: { brands: Brand[] }) => {
+interface product {
+    id: Number,
+    title: String,
+    price: Number,
+    brandId: Number,
+    
+  }
+  
+const UpdateProduct = ({ brands,product }: { brands: Brand[],product:product }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [brandId, setBrandId] = useState("");
+  const [name, setName] = useState(product.title);
+  const [price, setPrice] = useState(product.price);
+  const [brandId, setBrandId] = useState(product.brandId);
   const handleModal = () => {
     setIsOpen(!isOpen);
   };
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    await axios.post("/api/product", {
+    await axios.patch(`/api/product/${product.id}`, {
       title: name,
       price: Number(price),
       brandId: Number(brandId),
     });
-    setName("");
-    setPrice("");
-    setBrandId("");
     router.refresh();
   };
 
   return (
     <div>
-      <button className="btn" onClick={handleModal}>
-        Add Product
+      <button className="btn btn-warning" onClick={handleModal}>
+        Update
       </button>
       <div className={isOpen ? "modal modal-open" : "modal"}>
         <div className="modal-box">
@@ -55,7 +57,7 @@ const AddProduct = ({ brands }: { brands: Brand[] }) => {
                 type="number"
                 className="input input-bordered font-bold"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setPrice(Number(e.target.value))}
               />
             </div>
             <div className="form-control w-full">
@@ -64,7 +66,7 @@ const AddProduct = ({ brands }: { brands: Brand[] }) => {
                 name=""
                 id=""
                 className="select select-bordered"
-                onChange={(e) => setBrandId(e.target.value)}
+                onChange={(e) => setBrandId(Number(e.target.value))}
               >
                 <option value="" disabled>
                   select Brand
@@ -95,4 +97,4 @@ const AddProduct = ({ brands }: { brands: Brand[] }) => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;
